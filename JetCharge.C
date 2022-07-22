@@ -27,15 +27,23 @@ using namespace fastjet;  //fastjet is a library that builds jets
 using namespace std;
 
 //This class is to store the charge of the particles in FastJet
-class MyInfo: public PseudoJet::UserInfoBase {
+class MyInfo: public PseudoJet::UserInfoBase {  // what is a pseudoJet
 public:
   MyInfo(double charge) : _charge(charge){}
   double pdg_charge() const {return _charge;}
   double _charge;
+ // mj copied this from the internet because they want to know the pdg code of jet dtrs that's making the jet charge 0
+  MyInfo(int id) : _pdg_id(id){}
+  int pdg_id() const {return _pdg_id;}
+  int _pdg_id;
 };
 
 
-double kappa = 0.3;
+
+ 
+
+
+double kappa = 1;
 bool verbosity = 0; //printing out
 
 
@@ -59,17 +67,17 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
 
 
   // Histgrams for jet charge
-  TH1D* h1_u_jetcharge = new TH1D("h1_u_jetcharge", "", 30, binlow, binhigh); // up quark histo
-  TH1D* h1_ubar_jetcharge = new TH1D("h1_ubar_jetcharge", "", 30, binlow, binhigh); // up bar quark histo
-  TH1D* h1_d_jetcharge = new TH1D("h1_d_jetcharge", "", 30, binlow, binhigh); // down quark histo
-  TH1D* h1_dbar_jetcharge = new TH1D("h1_dbar_jetcharge", "", 30, binlow, binhigh); // down bar histo
-  TH1D* h1_g_jetcharge = new TH1D("h1_g_jetcharge", "", 30, binlow, binhigh); // gluon histo
-  TH1D* h1_s_jetcharge = new TH1D("h1_s_jetcharge", "", 30, binlow, binhigh); // strange bar histo
-  TH1D* h1_sbar_jetcharge = new TH1D("h1_sbar_jetcharge", "", 30, binlow, binhigh); // strage bar histo
-  TH1D* h1_b_jetcharge = new TH1D("h1_b_jetcharge", "", 30, binlow, binhigh); // down bar histo
-  TH1D* h1_bbar_jetcharge = new TH1D("h1_bbar_jetcharge", "", 30, binlow, binhigh); // gluon histo
-  TH1D* h1_c_jetcharge = new TH1D("h1_c_jetcharge", "", 30, binlow, binhigh); // strange bar histo
-  TH1D* h1_cbar_jetcharge = new TH1D("h1_cbar_jetcharge", "", 30, binlow, binhigh); // strage bar histo
+  TH1D* h1_u_jetcharge = new TH1D("h1_u_jetcharge", "", 300, binlow, binhigh); // up quark histo
+  TH1D* h1_ubar_jetcharge = new TH1D("h1_ubar_jetcharge", "", 300, binlow, binhigh); // up bar quark histo
+  TH1D* h1_d_jetcharge = new TH1D("h1_d_jetcharge", "", 300, binlow, binhigh); // down quark histo
+  TH1D* h1_dbar_jetcharge = new TH1D("h1_dbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
+  TH1D* h1_g_jetcharge = new TH1D("h1_g_jetcharge", "", 300, binlow, binhigh); // gluon histo
+  TH1D* h1_s_jetcharge = new TH1D("h1_s_jetcharge", "", 300, binlow, binhigh); // strange bar histo
+  TH1D* h1_sbar_jetcharge = new TH1D("h1_sbar_jetcharge", "", 300, binlow, binhigh); // strage bar histo
+  TH1D* h1_b_jetcharge = new TH1D("h1_b_jetcharge", "", 300, binlow, binhigh); // down bar histo
+  TH1D* h1_bbar_jetcharge = new TH1D("h1_bbar_jetcharge", "", 300, binlow, binhigh); // gluon histo
+  TH1D* h1_c_jetcharge = new TH1D("h1_c_jetcharge", "", 300, binlow, binhigh); // strange bar histo
+  TH1D* h1_cbar_jetcharge = new TH1D("h1_cbar_jetcharge", "", 300, binlow, binhigh); // strage bar histo
   // choose a jet definition
   double R = 0.5; //in LHCb radius is fixed
   JetDefinition jet_def(antikt_algorithm, R); // Anti-kT algorithm with radius R
@@ -90,19 +98,46 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
   #endif
 
   // Configure
-  //pythia8->ReadString("HardQCD:all = on") ; // turing on all head on collisions from QCD
-  pythia8->ReadString("HardQCD:hardbbbar = on") ; // turing on bbbar head on collisions from QCD
-  pythia8->ReadString("HardQCD:hardccbar = on") ; // turing on ccbar head on collisions from QCD
+ 
+
+
+
+  pythia8->ReadString("HardQCD:all = on") ; // turing on all head on collisions from QCD
+//  pythia8->ReadString("HardQCD:hardbbbar = on") ; // turing on bbbar head on collisions from QCD
+//  pythia8->ReadString("HardQCD:hardccbar = on") ; // turing on ccbar head on collisions from QCD
   pythia8->ReadString("Random:setSeed = on");
   // use a reproducible seed: always the same results for the tutorial.
   pythia8->ReadString("Random:seed = 42");
   pythia8->ReadString("PhaseSpace:pTHatMin = 20.0");
 
   // Turn off underlying event
-  pythia8->ReadString("PartonLevel:MPI = off"); // MultipartonInteractions  what are these 3 lines??
-  pythia8->ReadString("PartonLevel:ISR = off"); // Initial State Radiation
-  pythia8->ReadString("PartonLevel:FSR = off"); // Final State Radiation
-
+ pythia8->ReadString("PartonLevel:MPI = off"); // MultipartonInteractions  what are these 3 lines??
+ pythia8->ReadString("PartonLevel:ISR = off"); // Initial State Radiation
+ pythia8->ReadString("PartonLevel:FSR = off"); // Final State Radiation
+ pythia8->ReadString("511:mayDecay = off");
+ pythia8->ReadString("521:mayDecay = off");
+ pythia8->ReadString("10511:mayDecay = off");
+ pythia8->ReadString("10521:mayDecay = off");
+ pythia8->ReadString("513:mayDecay = off");
+ pythia8->ReadString("523:mayDecay = off");
+ pythia8->ReadString("-511:mayDecay = off");
+ pythia8->ReadString("-521:mayDecay = off");
+ pythia8->ReadString("-10511:mayDecay = off");
+ pythia8->ReadString("-10521:mayDecay = off");
+ pythia8->ReadString("-513:mayDecay = off");
+ pythia8->ReadString("-523:mayDecay = off");
+ pythia8->ReadString("411:mayDecay = off");
+ pythia8->ReadString("421:mayDecay = off");
+ pythia8->ReadString("10411:mayDecay = off");
+ pythia8->ReadString("10421:mayDecay = off");
+ pythia8->ReadString("413:mayDecay = off");
+ pythia8->ReadString("423:mayDecay = off");
+ pythia8->ReadString("-411:mayDecay = off");
+ pythia8->ReadString("-421:mayDecay = off");
+ pythia8->ReadString("-10411:mayDecay = off");
+ pythia8->ReadString("-10421:mayDecay = off");
+ pythia8->ReadString("-413:mayDecay = off");
+ pythia8->ReadString("-423:mayDecay = off");
 
   // Initialize
 
@@ -142,25 +177,22 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
       // Positive codes are final particles.
       if (ist <= 0) continue; //  we get it from previous line and  greater than 0 means it's not an intermidiate particle
       Int_t pdg = part->GetPdgCode();
+ 
       Float_t charge = TDatabasePDG::Instance()->GetParticle(pdg)->Charge();
       //if (charge == 0.) continue;
       Float_t eta = part->Eta();
       Float_t pt  = part->Pt();
-      if (pt < 0.2) continue;
+   //   if (pt < 0.2) continue;
       parts.push_back(PseudoJet(part->Px(), part->Py(), part->Pz(), part->Energy() ));
       parts.back().set_user_info(new MyInfo(charge));
       etaH->Fill(eta);
       if (pt > 0.) ptH->Fill(pt, 1./(2. * pt));
     }
 
-cout << " parton 1= " << pdg_parton1 << endl;
-cout << " parton 2= " << pdg_parton2 << endl;
-
-
     ClusterSequence cs(parts, jet_def); // building the jets in the events
     vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets()); // Store all the jets in the event
-    if(jets.size()<2) continue; //Throw away events with less than two jets
-    //cout << " num jets : " << jets.size() << endl;
+    if(jets.size()<2 || jets.size()>5) continue; //Throw away events with less than two jets
+    cout << " num jets : " << jets.size() << endl;
     int NumJets = 0; // Not important for now
     // Jet loop
     int pdg_jet = -99; // variable to store which flavor the jet came from (up jet? down jet? etc)
@@ -169,8 +201,8 @@ cout << " parton 2= " << pdg_parton2 << endl;
 //cout<< "jets size" << jets.size() <<endl;
     for (unsigned i = 0; i < jets.size(); i++) //Loop over the jets!
     {
-      if (jets[i].pt() < 15) continue; // get rid of low pT jets
-
+      if (jets[i].pt() < 20) continue; // get rid of low pT jets
+	
       //cout << "jet num : " <<  i << endl;
       PseudoJet jet = jets[i];
       TLorentzVector jetvec(jet.px(), jet.py(), jet.pz(), jet.e()); // Four vector of the jet
@@ -187,23 +219,63 @@ cout << " parton 2= " << pdg_parton2 << endl;
       }
 
       vector<PseudoJet> constituents = jet.constituents(); //give me jet daughters
+     if (constituents.size()<2) continue;
+     
       double jetcharge = 0;
     //  double kappa = 0.3;
 
       for (unsigned j = 0; j < constituents.size(); j++) // knowing what each jet daugther property for us to maybe build jet charge
       {
-        double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
-        PseudoJet con = constituents[j];
-        TVector3 con3(con.px(), con.py(), con.pz());
+ PseudoJet con = constituents[j];
+	     
+    
+	      double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
 
-        jetcharge+=pow(con.pt(), kappa)*dtrcharge/3.; //compute jet charge
+  
+        TVector3 con3(con.px(), con.py(), con.pz());
+     //   double  dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
+  	jetcharge+=pow(con.pt(), kappa)*dtrcharge/3.; //compute jet charge
 
       }
 
       jetcharge/=pow(jets[i].pt(), kappa); //normalize by jet pT
       //cout<<jetcharge<<",";
       //Fill histograms
+ 
+if ( jetcharge == 0){
+ 
+ 	
+        cout<< "particles of jets "<<  constituents.size() << endl;
+ for (unsigned j = 0; j < constituents.size(); j++){
+ PseudoJet con = constituents[j];
+	 //	 int  dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
+//	 cout << "pdg of  constituents " << dtrid << endl; 
+//         int  dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
+//  double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
+//  	 cout << " charge of  constituents " <<  dtrcharge << endl;
+      for (Int_t ip = 0; ip < np; ip++) {
+         TParticle* part = (TParticle*) particles->At(ip); // creating the T particle
+         Int_t ist = part->GetStatusCode();
+         if (ist <= 0) continue;
 
+         // check the 4vector of cons against 4vec of pythia particles to find a possible match
+         if (con.px()==part->Px()&& con.py()==part->Py() && con.pz()==part->Pz()&& con.e()==part->Energy()){
+                 //this condition will tell us the constituent we are looking at will match the T particle. Bc we can use Tparticle to get the pdg code for dtrs
+        //       cout<< "this is working T~T"<< endl; }
+         cout << "pdg for dtrs " << part->GetPdgCode() << endl;
+         int cPid;
+         cPid=part->GetPdgCode();
+        cout << "charge of dtrs " << TDatabasePDG::Instance()->GetParticle(cPid)->Charge()<< endl;
+      }
+
+        }
+cout<< endl; 
+
+}
+}
+
+  
+ 
 
       if(pdg_jet == 1) h1_d_jetcharge->Fill(jetcharge);//pdg code for down quark
       else if(pdg_jet == -1) h1_dbar_jetcharge->Fill(jetcharge);// pdg code for downbar quark
@@ -217,8 +289,8 @@ cout << " parton 2= " << pdg_parton2 << endl;
       else if(pdg_jet == 5) h1_b_jetcharge->Fill(jetcharge);//pdg code for b
       else if(pdg_jet == -5) h1_bbar_jetcharge->Fill(jetcharge);//pdg code for bbar
 
-cout<< "pdg code" << pdg_jet << endl;
-
+//cout<< "pdg code" << pdg_jet << endl;
+   
       //else if(pdg_jet == -2) h1_ubar_jetcharge->Fill(jetcharge);
       //h->Fill(jetcharge);
 
@@ -226,6 +298,7 @@ cout<< "pdg code" << pdg_jet << endl;
 
   
   }
+
 
   //if normalazation is on, you will see error bars thus you will not get the boxy histogram boys
   //say no to boxy boys
@@ -245,7 +318,7 @@ cout<< "pdg code" << pdg_jet << endl;
 
 
 
-  //pythia8->PrintStatistics();
+  pythia8->PrintStatistics();
 
 // The following makes pdf plots
 
@@ -320,7 +393,6 @@ cout<< "pdg code" << pdg_jet << endl;
     //gPad->SetBottomMargin(0.06);
     ccan[ican]->cd(); ccan[ican]->Divide(1,1,0.0001,0.0001);
     ccan[ican]->cd(1);
-
     */
     // mj radomly writing stuff
     //
@@ -414,11 +486,9 @@ ccan[ican]->cd(); ccan[ican]->Divide(2,2/*,0.0001,0.0001*/);
 /*
 TLatex tt;
   
-
 char cc[256] = "kappa";
 kappa = 0.3;
 printf(cc, kappa);
-
 tt.DrawLatex(0.5,0.1,cc,kappa);
 */
 
@@ -429,7 +499,6 @@ else { ccan[ican]->Print(plotfilePDF.Data()); }
     /*
   f.Write();
   f.Close();
-
     if (ican>-1){
     cout<<" You plotted "<<ican+1<<" canvasses......."<<endl;
     ccan[ican]->Print(plotfileC.Data());
@@ -458,7 +527,6 @@ ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
     h1_s_jetcharge->SetYTitle("Counts");
     h1_s_jetcharge->SetLineColor(kBlack);
     h1_s_jetcharge->SetLineStyle(kSolid);
-
   ccan[ican]->cd(3);
     h1_sbar_jetcharge->SetStats(0);
     h1_sbar_jetcharge->Draw();
@@ -475,25 +543,18 @@ ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
     h1_u_jetcharge->SetXTitle("Jet Charge");
     h1_u_jetcharge->SetLineColor(kBlack);
     h1_u_jetcharge->SetLineStyle(kSolid);
-
     h1_ubar_jetcharge->SetLineColor(kBlack);
     h1_ubar_jetcharge->SetLineStyle(kDashed);
-
     h1_d_jetcharge->SetLineColor(kRed);
     h1_d_jetcharge->SetLineStyle(kSolid);
-
     h1_dbar_jetcharge->SetLineColor(kRed);
     h1_dbar_jetcharge->SetLineStyle(kDashed);
-
     h1_g_jetcharge->SetLineColor(kGreen);
     h1_g_jetcharge->SetLineStyle(kSolid);
-
     h1_s_jetcharge->SetLineColor(kMagenta);
     h1_s_jetcharge->SetLineStyle(kSolid);
-
     h1_sbar_jetcharge->SetLineColor(kMagenta);
     h1_sbar_jetcharge->SetLineStyle(kDashed);
-
     h1_u_jetcharge->Draw("HIST same");
     h1_ubar_jetcharge->Draw("HIST same");
     h1_d_jetcharge->Draw("HIST same");
@@ -532,11 +593,8 @@ ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
 /*   
 TLatex tt;
   
-
 char cc[256] = "";
-
 sprintf(cc,"kappa",kappa);
-
 tt.DrawLatex(0.5,0.1,cc);
 */
 
@@ -547,6 +605,9 @@ tt.DrawLatex(0.5,0.1,cc);
 
 
 
+
 }
+
+
 
 
