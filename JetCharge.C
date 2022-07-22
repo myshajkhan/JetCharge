@@ -191,7 +191,8 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
 
     ClusterSequence cs(parts, jet_def); // building the jets in the events
     vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets()); // Store all the jets in the event
-    if(jets.size()<2 || jets.size()>5) continue; //Throw away events with less than two jets
+    if(jets.size()<2) continue; //Throw away events with less than two jets
+   
     cout << " num jets : " << jets.size() << endl;
     int NumJets = 0; // Not important for now
     // Jet loop
