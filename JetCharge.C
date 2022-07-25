@@ -43,7 +43,7 @@ public:
  
 
 
-double kappa = 1;
+double kappa = 0.5;
 bool verbosity = 0; //printing out
 
 
@@ -147,19 +147,19 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
   for (Int_t iev = 0; iev < nev; iev++) {
     pythia8->GenerateEvent();
 
-    //if (iev < ndeb) pythia8->EventListing();
-    //if (verbosity) { pythia8->EventListing(); }
+  
     pythia8->ImportParticles(particles,"All");
     Int_t np = particles->GetEntriesFast();
     parts.clear();
-    // Particle loop
+
+    // Particle loop:  which is inside the event loop. 
     TLorentzVector parton1, parton2; // Four-vectors for outgoing quarks/gluons
     int pdg_parton1, pdg_parton2; // pdg code for outgoing quarks/gluons
     for (Int_t ip = 0; ip < np; ip++) {
       TParticle* part = (TParticle*) particles->At(ip); // creating the T particle
       Int_t ist = part->GetStatusCode(); //not inportant probably
 /*       if (ip < 10) {
- 	cout << "ip: " << ip << " PDG Code: " << part->GetPdgCode() << endl;
+ 	cout << "ip: " << ip << " PDG Code: " << part->GetPdgCode() << endl; //this wil print out all the pdg codes of the particles that are included in each event. Use this comdition for troubleshooting
        }
 */
       //if the particle is the first outgoing quark/gluon, store its info
@@ -193,7 +193,7 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
     vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets()); // Store all the jets in the event
     if(jets.size()<2) continue; //Throw away events with less than two jets
    
-    cout << " num jets : " << jets.size() << endl;
+ //   cout << " num jets : " << jets.size() << endl;
     int NumJets = 0; // Not important for now
     // Jet loop
     int pdg_jet = -99; // variable to store which flavor the jet came from (up jet? down jet? etc)
@@ -202,9 +202,10 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
 //cout<< "jets size" << jets.size() <<endl;
     for (unsigned i = 0; i < jets.size(); i++) //Loop over the jets!
     {
+//	    cout << " jets[i].pt() " << jets[i].pt() << endl;
       if (jets[i].pt() < 20) continue; // get rid of low pT jets
 	
-      //cout << "jet num : " <<  i << endl;
+//      cout << "jet num : " <<  i << endl;
       PseudoJet jet = jets[i];
       TLorentzVector jetvec(jet.px(), jet.py(), jet.pz(), jet.e()); // Four vector of the jet
       if(checkdR(jetvec, parton1) < 0.1) has_parton1 = true;  //Check whether the direction of the jet matches the first outgoing parton
@@ -223,8 +224,7 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
      if (constituents.size()<2) continue;
      
       double jetcharge = 0;
-    //  double kappa = 0.3;
-
+   
       for (unsigned j = 0; j < constituents.size(); j++) // knowing what each jet daugther property for us to maybe build jet charge
       {
  PseudoJet con = constituents[j];
@@ -245,11 +245,11 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
  
 if ( jetcharge == 0){
  
- 	
+	cout << endl; 	
         cout<< "particles of jets "<<  constituents.size() << endl;
  for (unsigned j = 0; j < constituents.size(); j++){
  PseudoJet con = constituents[j];
-	 //	 int  dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
+	 int  dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
 //	 cout << "pdg of  constituents " << dtrid << endl; 
 //         int  dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
 //  double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
@@ -262,7 +262,7 @@ if ( jetcharge == 0){
          // check the 4vector of cons against 4vec of pythia particles to find a possible match
          if (con.px()==part->Px()&& con.py()==part->Py() && con.pz()==part->Pz()&& con.e()==part->Energy()){
                  //this condition will tell us the constituent we are looking at will match the T particle. Bc we can use Tparticle to get the pdg code for dtrs
-        //       cout<< "this is working T~T"<< endl; }
+       
          cout << "pdg for dtrs " << part->GetPdgCode() << endl;
          int cPid;
          cPid=part->GetPdgCode();
@@ -290,10 +290,7 @@ cout<< endl;
       else if(pdg_jet == 5) h1_b_jetcharge->Fill(jetcharge);//pdg code for b
       else if(pdg_jet == -5) h1_bbar_jetcharge->Fill(jetcharge);//pdg code for bbar
 
-//cout<< "pdg code" << pdg_jet << endl;
-   
-      //else if(pdg_jet == -2) h1_ubar_jetcharge->Fill(jetcharge);
-      //h->Fill(jetcharge);
+
 
     }
 
@@ -372,32 +369,11 @@ cout<< endl;
     plotfilePDF	= TString("./plots/")   + extension + TString(".pdf");
     plotfileO	= plotfilePDF + TString("(");
     plotfileC	= plotfilePDF + TString("]");
-    //c->SaveAs("plots/"+extension+".pdf");
+   
 
 
-
-
-    //c1->SaveAs(Form("plots_misc/Misc_%s"+extension+".pdf", file_name.c_str()));
-    //cout<<"...outbase   = "<<outbase.Data()<<endl;
-    //cout<<"...rootfile  = "<<rootfile.Data()<<endl;
-    //cout<<"...plotfile  = "<<plotfile.Data()<<endl;
-
-
-    //
-    // Start new page!!!!
-  /*  //
-    ++ican;
-    sprintf(buf,"ccan%d",ican);
-    ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
-    ccan[ican]->SetFillColor(10);
-    //gPad->SetLeftMargin(0.16);
-    //gPad->SetBottomMargin(0.06);
-    ccan[ican]->cd(); ccan[ican]->Divide(1,1,0.0001,0.0001);
-    ccan[ican]->cd(1);
-    */
-    // mj radomly writing stuff
-    //
-  // new page
+    
+// new page
 ++ican;
 sprintf(buf,"ccan%d",ican);
 ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
@@ -470,134 +446,14 @@ ccan[ican]->cd(); ccan[ican]->Divide(2,2/*,0.0001,0.0001*/);
   h1_dbar_jetcharge->SetLineStyle(kSolid);
 
 
-  /*auto legend1 = new TLegend(0.6,0.7,0.8,0.9);
-    legend1->SetBorderSize(0);
-    legend1->SetFillStyle(0);
-    legend1->SetFillColor(3);
-    legend1->AddEntry(kappa, "kappa");
-    legend1->AddEntry(h1_ubar_jetcharge, "ubar");
-    legend1->AddEntry(h1_d_jetcharge, "d");
-    legend1->AddEntry(h1_dbar_jetcharge, "dbar");
-     legend1->AddEntry(h1_g_jetcharge, "g");
-    legend1->AddEntry(h1_s_jetcharge, "s");
-   legend1->AddEntry(h1_sbar_jetcharge, "sbar");
-  // legend1->AddEntry(nev, "events");
-    legend1->Draw("same");
-*/
-/*
-TLatex tt;
-  
-char cc[256] = "kappa";
-kappa = 0.3;
-printf(cc, kappa);
-tt.DrawLatex(0.5,0.1,cc,kappa);
-*/
+ 
 
      ccan[ican]->cd();ccan[ican]->Update();
 if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
 else { ccan[ican]->Print(plotfilePDF.Data()); }
 
-    /*
-  f.Write();
-  f.Close();
-    if (ican>-1){
-    cout<<" You plotted "<<ican+1<<" canvasses......."<<endl;
-    ccan[ican]->Print(plotfileC.Data());
-    }
-*/
-/*
-//newpage
-++ican;
-sprintf(buf,"ccan%d",ican);
-ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
-ccan[ican]->SetFillColor(10);
-//gPad->SetLeftMargin(0.16);
-//gPad->SetBottomMargin(0.06);
-ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
-  ccan[ican]->cd(1);
-    h1_g_jetcharge->SetStats(0);
-    h1_g_jetcharge->Draw();
-    h1_g_jetcharge->SetXTitle("Jet charge for g");
-    h1_g_jetcharge->SetYTitle("Counts");
-    h1_g_jetcharge->SetLineColor(kBlack);
-    h1_g_jetcharge->SetLineStyle(kSolid);
-  ccan[ican]->cd(2);
-    h1_s_jetcharge->SetStats(0);
-    h1_s_jetcharge->Draw();
-    h1_s_jetcharge->SetXTitle("Jet charge for s");
-    h1_s_jetcharge->SetYTitle("Counts");
-    h1_s_jetcharge->SetLineColor(kBlack);
-    h1_s_jetcharge->SetLineStyle(kSolid);
-  ccan[ican]->cd(3);
-    h1_sbar_jetcharge->SetStats(0);
-    h1_sbar_jetcharge->Draw();
-    h1_sbar_jetcharge->SetXTitle("Jet charge for sbar");
-    h1_sbar_jetcharge->SetYTitle("Counts");
-    h1_sbar_jetcharge->SetLineColor(kBlack);
-    h1_sbar_jetcharge->SetLineStyle(kSolid);
-*/
-  
+ 
 
-     
- /*
-    //plot stuff here!!!!
-    h1_u_jetcharge->SetXTitle("Jet Charge");
-    h1_u_jetcharge->SetLineColor(kBlack);
-    h1_u_jetcharge->SetLineStyle(kSolid);
-    h1_ubar_jetcharge->SetLineColor(kBlack);
-    h1_ubar_jetcharge->SetLineStyle(kDashed);
-    h1_d_jetcharge->SetLineColor(kRed);
-    h1_d_jetcharge->SetLineStyle(kSolid);
-    h1_dbar_jetcharge->SetLineColor(kRed);
-    h1_dbar_jetcharge->SetLineStyle(kDashed);
-    h1_g_jetcharge->SetLineColor(kGreen);
-    h1_g_jetcharge->SetLineStyle(kSolid);
-    h1_s_jetcharge->SetLineColor(kMagenta);
-    h1_s_jetcharge->SetLineStyle(kSolid);
-    h1_sbar_jetcharge->SetLineColor(kMagenta);
-    h1_sbar_jetcharge->SetLineStyle(kDashed);
-    h1_u_jetcharge->Draw("HIST same");
-    h1_ubar_jetcharge->Draw("HIST same");
-    h1_d_jetcharge->Draw("HIST same");
-    h1_dbar_jetcharge->Draw("HIST same");
-    h1_g_jetcharge->Draw("HIST same");
-    h1_s_jetcharge->Draw("HIST same");
-    h1_sbar_jetcharge->Draw("HIST same");
-*/
- /*   // add a legend!!
-    auto legend1 = new TLegend(0.6,0.7,0.8,0.9);
-    legend1->SetBorderSize(0);
-    legend1->SetFillStyle(0);
-    legend1->SetFillColor(3);
-    legend1->AddEntry(h1_u_jetcharge, "u");
-    legend1->AddEntry(h1_ubar_jetcharge, "ubar");
-    legend1->AddEntry(h1_d_jetcharge, "d");
-    legend1->AddEntry(h1_dbar_jetcharge, "dbar");
-     legend1->AddEntry(h1_g_jetcharge, "g");
-    legend1->AddEntry(h1_s_jetcharge, "s");
-   legend1->AddEntry(h1_sbar_jetcharge, "sbar");
-  // legend1->AddEntry(nev, "events");
-    legend1->Draw("same");
-*/    
-  
-
-
-/*
-    ccan[ican]->cd();ccan[ican]->Update();
-    if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
-       else { ccan[ican]->Print(plotfilePDF.Data()); }
-*/       
-    //
-//    f.Write();
- //   f.Close();
-
-/*   
-TLatex tt;
-  
-char cc[256] = "";
-sprintf(cc,"kappa",kappa);
-tt.DrawLatex(0.5,0.1,cc);
-*/
 
     if (ican>-1){
     cout<<" You plotted "<<ican+1<<" canvasses......."<<endl;
@@ -608,7 +464,4 @@ tt.DrawLatex(0.5,0.1,cc);
 
 
 }
-
-
-
 
