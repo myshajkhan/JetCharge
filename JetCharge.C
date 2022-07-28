@@ -33,9 +33,9 @@ public:
   double pdg_charge() const {return _charge;}
   double _charge;
  // mj copied this from the internet because they want to know the pdg code of jet dtrs that's making the jet charge 0
-  MyInfo(int id) : _pdg_id(id){}
-  int pdg_id() const {return _pdg_id;}
-  int _pdg_id;
+ // /MyInfo(int id) : _pdg_id(id){}
+  //int pdg_id() const {return _pdg_id;}
+  //int _pdg_id;
 };
 
 
@@ -43,11 +43,11 @@ public:
  
 
 
-double kappa = 0.5;
+double kappa = 0.3;// the power on pT
 bool verbosity = 0; //printing out
 
 
-void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . We dont know what deb means lol
+void JetCharge(Int_t nev  = 100000, Int_t ndeb = 3) // nev= number of events . We dont know what deb means lol
 {
 
 
@@ -67,17 +67,17 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
 
 
   // Histgrams for jet charge
-  TH1D* h1_u_jetcharge = new TH1D("h1_u_jetcharge", "", 300, binlow, binhigh); // up quark histo
-  TH1D* h1_ubar_jetcharge = new TH1D("h1_ubar_jetcharge", "", 300, binlow, binhigh); // up bar quark histo
-  TH1D* h1_d_jetcharge = new TH1D("h1_d_jetcharge", "", 300, binlow, binhigh); // down quark histo
-  TH1D* h1_dbar_jetcharge = new TH1D("h1_dbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
-  TH1D* h1_g_jetcharge = new TH1D("h1_g_jetcharge", "", 300, binlow, binhigh); // gluon histo
-  TH1D* h1_s_jetcharge = new TH1D("h1_s_jetcharge", "", 300, binlow, binhigh); // strange bar histo
-  TH1D* h1_sbar_jetcharge = new TH1D("h1_sbar_jetcharge", "", 300, binlow, binhigh); // strage bar histo
-  TH1D* h1_b_jetcharge = new TH1D("h1_b_jetcharge", "", 300, binlow, binhigh); // down bar histo
-  TH1D* h1_bbar_jetcharge = new TH1D("h1_bbar_jetcharge", "", 300, binlow, binhigh); // gluon histo
-  TH1D* h1_c_jetcharge = new TH1D("h1_c_jetcharge", "", 300, binlow, binhigh); // strange bar histo
-  TH1D* h1_cbar_jetcharge = new TH1D("h1_cbar_jetcharge", "", 300, binlow, binhigh); // strage bar histo
+  TH1D* h1_u_jetcharge = new TH1D("h1_u_jetcharge", "", 50, binlow, binhigh); // up quark histo
+  TH1D* h1_ubar_jetcharge = new TH1D("h1_ubar_jetcharge", "", 50, binlow, binhigh); // up bar quark histo
+  TH1D* h1_d_jetcharge = new TH1D("h1_d_jetcharge", "", 50, binlow, binhigh); // down quark histo
+  TH1D* h1_dbar_jetcharge = new TH1D("h1_dbar_jetcharge", "", 50, binlow, binhigh); // down bar histo
+  TH1D* h1_g_jetcharge = new TH1D("h1_g_jetcharge", "", 50, binlow, binhigh); // gluon histo
+  TH1D* h1_s_jetcharge = new TH1D("h1_s_jetcharge", "", 50, binlow, binhigh); // strange bar histo
+  TH1D* h1_sbar_jetcharge = new TH1D("h1_sbar_jetcharge", "", 50, binlow, binhigh); // strage bar histo
+  TH1D* h1_b_jetcharge = new TH1D("h1_b_jetcharge", "", 50, binlow, binhigh); // down bar histo
+  TH1D* h1_bbar_jetcharge = new TH1D("h1_bbar_jetcharge", "", 50, binlow, binhigh); // gluon histo
+  TH1D* h1_c_jetcharge = new TH1D("h1_c_jetcharge", "", 30, binlow, binhigh); // strange bar histo
+  TH1D* h1_cbar_jetcharge = new TH1D("h1_cbar_jetcharge", "", 30, binlow, binhigh); // strage bar histo
   // choose a jet definition
   double R = 0.5; //in LHCb radius is fixed
   JetDefinition jet_def(antikt_algorithm, R); // Anti-kT algorithm with radius R
@@ -114,6 +114,7 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
  pythia8->ReadString("PartonLevel:MPI = off"); // MultipartonInteractions  what are these 3 lines??
  pythia8->ReadString("PartonLevel:ISR = off"); // Initial State Radiation
  pythia8->ReadString("PartonLevel:FSR = off"); // Final State Radiation
+
  pythia8->ReadString("511:mayDecay = off");
  pythia8->ReadString("521:mayDecay = off");
  pythia8->ReadString("10511:mayDecay = off");
@@ -141,12 +142,12 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
 
   // Initialize
 
-  pythia8->Initialize(2212 /* p */, 2212 /* p */, 13000. /* GeV */); //proton proton collision at 13 TeV
+  pythia8->Initialize(2212 /* p */, 2212 /* p */, 13000 /* GeV */); //proton proton collision at 13 TeV
 
   // Event loop
   for (Int_t iev = 0; iev < nev; iev++) {
     pythia8->GenerateEvent();
-
+  //  pythia8->EventListing();
   
     pythia8->ImportParticles(particles,"All");
     Int_t np = particles->GetEntriesFast();
@@ -182,7 +183,7 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
       //if (charge == 0.) continue;
       Float_t eta = part->Eta();
       Float_t pt  = part->Pt();
-   //   if (pt < 0.2) continue;
+      if (pt < 0.2) continue;
       parts.push_back(PseudoJet(part->Px(), part->Py(), part->Pz(), part->Energy() ));
       parts.back().set_user_info(new MyInfo(charge));
       etaH->Fill(eta);
@@ -204,7 +205,7 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
     {
 //	    cout << " jets[i].pt() " << jets[i].pt() << endl;
       if (jets[i].pt() < 20) continue; // get rid of low pT jets
-	
+	if (fabs(jets[i].eta())>4) continue;	      
 //      cout << "jet num : " <<  i << endl;
       PseudoJet jet = jets[i];
       TLorentzVector jetvec(jet.px(), jet.py(), jet.pz(), jet.e()); // Four vector of the jet
@@ -221,7 +222,7 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
       }
 
       vector<PseudoJet> constituents = jet.constituents(); //give me jet daughters
-     if (constituents.size()<2) continue;
+     if (constituents.size()<3) continue;
      
       double jetcharge = 0;
    
@@ -242,11 +243,12 @@ void JetCharge(Int_t nev  = 1000000, Int_t ndeb = 1) // nev= number of events . 
       jetcharge/=pow(jets[i].pt(), kappa); //normalize by jet pT
       //cout<<jetcharge<<",";
       //Fill histograms
- 
+ /*
 if ( jetcharge == 0){
  
 	cout << endl; 	
-        cout<< "particles of jets "<<  constituents.size() << endl;
+       cout << "pT of jets " << jets[i].pt() << endl;
+       	cout<< "particles of jets "<<  constituents.size() << endl;
  for (unsigned j = 0; j < constituents.size(); j++){
  PseudoJet con = constituents[j];
 	 int  dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
@@ -273,8 +275,9 @@ if ( jetcharge == 0){
 cout<< endl; 
 
 }
-}
 
+}
+*/
   
  
 
