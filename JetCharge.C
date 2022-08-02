@@ -32,6 +32,11 @@ public:
   MyInfo(double charge) : _charge(charge){}
   double pdg_charge() const {return _charge;}
   double _charge;
+  //mj inserting
+   MyInfo(int id) : _pdg_id(id){}
+  int pdg_id() const {return _pdg_id;}
+  int _pdg_id;
+  //mj done
 };
 class MyPDG: public PseudoJet::UserInfoBase {
 public:
@@ -92,7 +97,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
   TH1D* h1_b_jetcharge = new TH1D("h1_b_jetcharge", "", 30, binlow, binhigh); // down quark histo
   TH1D* h1_bbar_jetcharge = new TH1D("h1_bbar_jetcharge", "", 30, binlow, binhigh); // down bar histo
   TH1D* h1_g_jetcharge = new TH1D("h1_g_jetcharge", "", 30, binlow, binhigh); // down quark histo
-
+  TH1* h1_pdg_0_charge = new TH1I ("h1_pdg_0_charge","", 300, -300, 300 ); //pdg code for jet charge 0
   TH1D* h1_frag_charge = new TH1D("h1_frag_charge", "", 6, -2.5, 3.5);
 
 
@@ -211,15 +216,12 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       parts.push_back(PseudoJet(part->Px(), part->Py(), part->Pz(), part->Energy() ));
       //cout<<"("<<pdg << "," << charge<<"),";
       parts.back().set_user_info(new MyInfo(charge));
-      //cout<<"before";
-      //parts.back().set_user_info(new MyPDG(pdg));
-      //cout<<"after";
+  
       etaH->Fill(eta);
       if (pt > 0.) ptH->Fill(pt, 1./(2. * pt));
     }
 
-    //cout << " parts size : " << parts.size() << endl;
-
+    
     ClusterSequence cs(parts, jet_def); // building the jets in the events
     vector<PseudoJet> jets = sorted_by_pt(cs.inclusive_jets()); // Store all the jets in the event
     if(jets.size()<2) continue; //Throw away events with less than two jets
@@ -248,28 +250,69 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       else if(has_parton2 && (!has_parton1)){// If this is true, then the jet came from the second outgoing parton
         pdg_jet = pdg_parton2;
       }
-
+      int zero_pdg = 0;
+      int  dtrid = 0;
       vector<PseudoJet> constituents = jet.constituents(); //give me jet daughters
       if(constituents.size() < 3) continue;
       double jetcharge = 0;
 
       for (unsigned j = 0; j < constituents.size(); j++) // knowing what each jet daugther property for us to maybe build jet charge
       {
-        //cout<<"here";
-        //cout<<constituents.at(j).description();
+      
+       
         double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
-        //double dtrcharge = 0;
-        //int pid = constituents.at(j).user_info<MyPDG>().pdg_id();
-        //cout<<"("<<pid << "," << dtrcharge<<"),";
         PseudoJet con = constituents[j];
         TVector3 con3(con.px(), con.py(), con.pz());
-
         jetcharge+=pow(con.pt(), kappa)*dtrcharge/3.; //compute jet charge
 
-      }
+      
 
       jetcharge/=pow(jets[i].pt(), kappa); //normalize by jet pT
-      //cout<<jetcharge<<",";
+      
+      //mj inputing
+
+	 if ( jetcharge == 0){
+	
+/*		cout << endl; 	
+ 		cout << " event number " << nev << endl;
+		cout<< "particles of jets "<<  constituents.size() << endl;
+*/
+		for (unsigned j = 0; j < constituents.size(); j++){
+	
+			PseudoJet con = constituents[j];
+		//	dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
+
+				
+			 for (Int_t ip = 0; ip < np; ip++) {
+            			TParticle* part = (TParticle*) particles->At(ip); // creating the T particle
+        		 	Int_t ist = part->GetStatusCode();
+        		 	if (ist <= 0) continue;
+
+
+	
+
+
+				// check the 4vector of cons against 4vec of pythia particles to find a possible match
+         			if (con.px()==part->Px()&& con.py()==part->Py() && con.pz()==part->Pz()&& con.e()==part->Energy()){
+                		 //this condition will tell us the constituent we are looking at will match the T particle. Bc we can use Tparticle to get the pdg code for dtrs
+       					dtrid=part->GetPdgCode();
+  //       				cout << "pdg for dtrs " << dtrid << endl;
+
+					
+				}
+
+		       }	
+
+		}
+
+	}
+
+
+}       
+      zero_pdg=+dtrid;// constituents with 0 e charge. We are making this to make a histogram
+
+//      }//remove this if you are uncommenting the jetcharge 0 loop
+
       //Fill histograms
       if(pdg_jet == 1) h1_d_jetcharge->Fill(jetcharge);
       else if(pdg_jet == -1) h1_dbar_jetcharge->Fill(jetcharge);
@@ -280,7 +323,8 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       else if(pdg_jet == 5) h1_b_jetcharge->Fill(jetcharge);
       else if(pdg_jet == -5) h1_bbar_jetcharge->Fill(jetcharge);
       else if(pdg_jet == 21) h1_g_jetcharge->Fill(jetcharge);
-
+	
+      h1_pdg_0_charge->Fill(zero_pdg);
       //else if(pdg_jet == -2) h1_ubar_jetcharge->Fill(jetcharge);
       //h->Fill(jetcharge);
 
@@ -294,7 +338,6 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
   //h1_dbar_jetcharge->Scale(1./h1_dbar_jetcharge->Integral());
   //pythia8->PrintStatistics();
 
-// The following makes pdf plots
 
       //---- paint setup...
     //
@@ -346,19 +389,11 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     plotfileO	= plotfilePDF + TString("(");
     plotfileC	= plotfilePDF + TString("]");
     //c->SaveAs("plots/"+extension+".pdf");
-
-
-
-
-    //c1->SaveAs(Form("plots_misc/Misc_%s"+extension+".pdf", file_name.c_str()));
-    //cout<<"...outbase   = "<<outbase.Data()<<endl;
-    //cout<<"...rootfile  = "<<rootfile.Data()<<endl;
-    //cout<<"...plotfile  = "<<plotfile.Data()<<endl;
-
-
-    //
+    
+  
+    
     // Start new page!!!!
-    //
+   
     ++ican;
     sprintf(buf,"ccan%d",ican);
     ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
@@ -449,7 +484,8 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     //plot stuff here!!!!
     h1_frag_charge->Draw();
 
-
+    ccan [ican]->cd(3);
+    h1_pdg_0_charge->Draw();
 
     // add a legend!!
     // auto legend1 = new TLegend(0.6,0.7,0.8,0.9);
