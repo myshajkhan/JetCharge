@@ -29,11 +29,10 @@ using namespace std;
 //This class is to store the charge of the particles in FastJet
 class MyInfo: public PseudoJet::UserInfoBase {
 public:
-  MyInfo(double charge) : _charge(charge){}
+  MyInfo(double charge, int pdgid) : _charge(charge), _pdg_id(pdgid){}
   double pdg_charge() const {return _charge;}
   double _charge;
   //mj inserting
-   MyInfo(int id) : _pdg_id(id){}
   int pdg_id() const {return _pdg_id;}
   int _pdg_id;
   //mj done
@@ -78,8 +77,8 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
   gSystem->Load("libEGPythia8");
   // Histograms
 
-  int binlow = -2; //lower edge of jet charge histogram
-  int binhigh = 2; // upper edge of jet charge histogram
+  int binlow = -3; //lower edge of jet charge histogram
+  int binhigh = 3; // upper edge of jet charge histogram
 
   TFile f("hists/"+ extension+".root", "RECREATE");
 
@@ -88,15 +87,17 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
 
 
   // Histgrams for jet charge
-  TH1D* h1_u_jetcharge = new TH1D("h1_u_jetcharge", "", 30, binlow, binhigh); // up quark histo
-  TH1D* h1_ubar_jetcharge = new TH1D("h1_ubar_jetcharge", "", 30, binlow, binhigh); // up bar quark histo
-  TH1D* h1_d_jetcharge = new TH1D("h1_d_jetcharge", "", 30, binlow, binhigh); // down quark histo
-  TH1D* h1_dbar_jetcharge = new TH1D("h1_dbar_jetcharge", "", 30, binlow, binhigh); // down bar histo
-  TH1D* h1_c_jetcharge = new TH1D("h1_c_jetcharge", "", 30, binlow, binhigh); // down quark histo
-  TH1D* h1_cbar_jetcharge = new TH1D("h1_cbar_jetcharge", "", 30, binlow, binhigh); // down bar histo
-  TH1D* h1_b_jetcharge = new TH1D("h1_b_jetcharge", "", 30, binlow, binhigh); // down quark histo
-  TH1D* h1_bbar_jetcharge = new TH1D("h1_bbar_jetcharge", "", 30, binlow, binhigh); // down bar histo
+  TH1D* h1_u_jetcharge = new TH1D("h1_u_jetcharge", "", 300, binlow, binhigh); // up quark histo
+  TH1D* h1_ubar_jetcharge = new TH1D("h1_ubar_jetcharge", "", 300, binlow, binhigh); // up bar quark histo
+  TH1D* h1_d_jetcharge = new TH1D("h1_d_jetcharge", "", 300, binlow, binhigh); // down quark histo
+  TH1D* h1_dbar_jetcharge = new TH1D("h1_dbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
+  TH1D* h1_c_jetcharge = new TH1D("h1_c_jetcharge", "", 300, binlow, binhigh); // down quark histo
+  TH1D* h1_cbar_jetcharge = new TH1D("h1_cbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
+  TH1D* h1_b_jetcharge = new TH1D("h1_b_jetcharge", "", 300, binlow, binhigh); // down quark histo
+  TH1D* h1_bbar_jetcharge = new TH1D("h1_bbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
   TH1D* h1_g_jetcharge = new TH1D("h1_g_jetcharge", "", 30, binlow, binhigh); // down quark histo
+  TH1D* zero_jet_dtrcharge = new TH1D("zero_jet_dtrcharge", "", 300, -4, 4); // jet daughter's charges histo
+  TH1D* zero_jet_size = new TH1D("zero_jet_size", "", 300, 0, 25); // particle numbers in 0 jets
   TH1* h1_pdg_0_charge = new TH1I ("h1_pdg_0_charge","", 300, -300, 300 ); //pdg code for jet charge 0
   TH1D* h1_frag_charge = new TH1D("h1_frag_charge", "", 6, -2.5, 3.5);
 
@@ -215,7 +216,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       if (pt < 0.2) continue;
       parts.push_back(PseudoJet(part->Px(), part->Py(), part->Pz(), part->Energy() ));
       //cout<<"("<<pdg << "," << charge<<"),";
-      parts.back().set_user_info(new MyInfo(charge));
+      parts.back().set_user_info(new MyInfo(charge, pdg));
   
       etaH->Fill(eta);
       if (pt > 0.) ptH->Fill(pt, 1./(2. * pt));
@@ -240,8 +241,8 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       //cout << "jet num : " <<  i << endl;
       PseudoJet jet = jets[i];
       TLorentzVector jetvec(jet.px(), jet.py(), jet.pz(), jet.e()); // Four vector of the jet
-      if(jetvec.DeltaR(parton1) < 0.5) has_parton1 = true;  //Check whether the direction of the jet matches the first outgoing parton
-      else if(jetvec.DeltaR(parton2) < 0.5) has_parton2 = true; //Check whether the direction of the jet matches the second outgoing parton
+      if(jetvec.DeltaR(parton1) < 0.1) has_parton1 = true;  //Check whether the direction of the jet matches the first outgoing parton
+      else if(jetvec.DeltaR(parton2) < 0.1) has_parton2 = true; //Check whether the direction of the jet matches the second outgoing parton
 
 
       if(has_parton1&&(!has_parton2)){// If this is true, then the jet came from the first outgoing parton
@@ -250,8 +251,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       else if(has_parton2 && (!has_parton1)){// If this is true, then the jet came from the second outgoing parton
         pdg_jet = pdg_parton2;
       }
-      int zero_pdg = 0;
-      int  dtrid = 0;
+     
       vector<PseudoJet> constituents = jet.constituents(); //give me jet daughters
       if(constituents.size() < 3) continue;
       double jetcharge = 0;
@@ -266,52 +266,48 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
         jetcharge+=pow(con.pt(), kappa)*dtrcharge/3.; //compute jet charge
 
       
-
+      }
       jetcharge/=pow(jets[i].pt(), kappa); //normalize by jet pT
-      
+    	cout << "jet charge " << jetcharge << endl;
+  
       //mj inputing
 
-	 if ( jetcharge == 0){
+       if ( fabs(jetcharge) < 0.05){
 	
+		cout << endl,
+	    	cout << "jet charge zero " << jetcharge << endl; 		     
 /*		cout << endl; 	
  		cout << " event number " << nev << endl;
 		cout<< "particles of jets "<<  constituents.size() << endl;
 */
+
 		for (unsigned j = 0; j < constituents.size(); j++){
 	
 			PseudoJet con = constituents[j];
-		//	dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
 
-				
-			 for (Int_t ip = 0; ip < np; ip++) {
-            			TParticle* part = (TParticle*) particles->At(ip); // creating the T particle
-        		 	Int_t ist = part->GetStatusCode();
-        		 	if (ist <= 0) continue;
+         			
+     
+					int dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
+					if (jetcharge == 0 && dtrid == 22) continue; 
+					h1_pdg_0_charge->Fill(dtrid);
+					zero_jet_size->Fill(constituents.size());	
+     					double dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
+					zero_jet_dtrcharge->Fill(dtrcharge);					
+					cout<< "dtrcharge " << dtrcharge <<endl;
+			 		int dtrflavor = (pdgcode/ 100) % 10;
+				       	if (dtrflavor == 5 ){
 
-
-	
-
-
-				// check the 4vector of cons against 4vec of pythia particles to find a possible match
-         			if (con.px()==part->Px()&& con.py()==part->Py() && con.pz()==part->Pz()&& con.e()==part->Energy()){
-                		 //this condition will tell us the constituent we are looking at will match the T particle. Bc we can use Tparticle to get the pdg code for dtrs
-       					dtrid=part->GetPdgCode();
-  //       				cout << "pdg for dtrs " << dtrid << endl;
-
-					
-				}
-
-		       }	
+			  
+			 
 
 		}
 
-	}
+
 
 
 }       
-      zero_pdg=+dtrid;// constituents with 0 e charge. We are making this to make a histogram
-
-//      }//remove this if you are uncommenting the jetcharge 0 loop
+   
+     
 
       //Fill histograms
       if(pdg_jet == 1) h1_d_jetcharge->Fill(jetcharge);
@@ -324,7 +320,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       else if(pdg_jet == -5) h1_bbar_jetcharge->Fill(jetcharge);
       else if(pdg_jet == 21) h1_g_jetcharge->Fill(jetcharge);
 	
-      h1_pdg_0_charge->Fill(zero_pdg);
+    //  h1_pdg_0_charge->Fill(zero_pdg);
       //else if(pdg_jet == -2) h1_ubar_jetcharge->Fill(jetcharge);
       //h->Fill(jetcharge);
 
@@ -407,7 +403,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     h1_u_jetcharge->SetLineColor(kBlack);
     h1_u_jetcharge->SetLineStyle(kSolid);
 
-    h1_ubar_jetcharge->SetLineColor(kBlack);
+    h1_ubar_jetcharge->SetLineColor(kRed);
     h1_ubar_jetcharge->SetLineStyle(kDashed);
 
     h1_u_jetcharge->Draw("HIST same");
@@ -415,7 +411,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
 
     ccan[ican]->cd(2);
 
-    h1_d_jetcharge->SetLineColor(kRed);
+    h1_d_jetcharge->SetLineColor(kBlack);
     h1_d_jetcharge->SetLineStyle(kSolid);
 
     h1_dbar_jetcharge->SetLineColor(kRed);
@@ -425,7 +421,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     h1_dbar_jetcharge->Draw("HIST same");
 
     ccan[ican]->cd(3);
-    h1_c_jetcharge->SetLineColor(kRed);
+    h1_c_jetcharge->SetLineColor(kBlack);
     h1_c_jetcharge->SetLineStyle(kSolid);
 
     h1_cbar_jetcharge->SetLineColor(kRed);
@@ -435,7 +431,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     h1_cbar_jetcharge->Draw("HIST same");
 
     ccan[ican]->cd(4);
-    h1_b_jetcharge->SetLineColor(kRed);
+    h1_b_jetcharge->SetLineColor(kBlack);
     h1_b_jetcharge->SetLineStyle(kSolid);
 
     h1_bbar_jetcharge->SetLineColor(kRed);
@@ -473,10 +469,53 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     //gPad->SetBottomMargin(0.06);
     ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
     ccan[ican]->cd(1);
+
+    zero_jet_size->Draw("HIST same");
+
+
+/*
+    ccan[ican]->cd(2);
+    //plot stuff here!!!!
+    h1_frag_charge->Draw();
+
+    ccan [ican]->cd(3);
+    h1_pdg_0_charge->Draw();
+
+
+    ccan [ican]->cd(4);
+    zero_jet_dtrcharge->Draw();
+
+
+   ccan[ican]->cd();ccan[ican]->Update();
+    if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
+       else { ccan[ican]->Print(plotfilePDF.Data()); }
+  */  //
+
+
+
+
+    // Start new page!!!!
+    
+
+
+ ccan[ican]->cd();ccan[ican]->Update();
+    if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
+       else { ccan[ican]->Print(plotfilePDF.Data()); }
+
+
+    ++ican;
+    sprintf(buf,"ccan%d",ican);
+    ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
+    ccan[ican]->SetFillColor(10);
+    //gPad->SetLeftMargin(0.16);
+    //gPad->SetBottomMargin(0.06);
+    ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
+    ccan[ican]->cd(1);
     h1_g_jetcharge->SetLineColor(kBlack);
     h1_g_jetcharge->SetLineStyle(kSolid);
 
     h1_g_jetcharge->Draw("HIST same");
+
 
 
 
@@ -486,6 +525,11 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
 
     ccan [ican]->cd(3);
     h1_pdg_0_charge->Draw();
+
+
+    ccan [ican]->cd(4);
+    zero_jet_dtrcharge->Draw();
+
 
     // add a legend!!
     // auto legend1 = new TLegend(0.6,0.7,0.8,0.9);
