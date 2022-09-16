@@ -87,37 +87,21 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
 
 
   // Histgrams for jet charge
-  TH1D* h1_u_jetcharge_even = new TH1D("even_u_jetcharge", "", 300, binlow, binhigh); // up quark histo
-  TH1D* h1_ubar_jetcharge_even = new TH1D("even_ubar_jetcharge", "", 300, binlow, binhigh); // up bar quark histo
-  TH1D* h1_d_jetcharge_even = new TH1D("even_d_jetcharge", "", 300, binlow, binhigh); // down quark histo
-  TH1D* h1_dbar_jetcharge_even = new TH1D("even_dbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
-  TH1D* h1_c_jetcharge_even = new TH1D("even_c_jetcharge", "", 300, binlow, binhigh); // down quark histo
-  TH1D* h1_cbar_jetcharge_even = new TH1D("even_cbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
-  TH1D* h1_b_jetcharge_even = new TH1D("even_b_jetcharge", "", 300, binlow, binhigh); // down quark histo
-  TH1D* h1_bbar_jetcharge_even = new TH1D("even_bbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
-  TH1D* h1_g_jetcharge_even = new TH1D("even_g_jetcharge", "", 30, binlow, binhigh); // down quark histo
-  TH1D* zero_jet_dtrcharge_even = new TH1D("even_jet_dtrcharge", "", 300, -4, 4); // jet daughter's charges histo
-  TH1D* zero_jet_size_even = new TH1D("even_jet_size", "", 300, 0, 25); // particle numbers in 0 jets
-  TH1* h1_pdg_0_charge_even = new TH1I ("even_pdg_0_charge","", 300, -300, 300 ); //pdg code for jet charge 0
-  TH1D* h1_frag_charge_even = new TH1D("even_frag_charge", "", 6, -2.5, 3.5);
-  TH1D* b_meson_even = new TH1D("even_b_meson_charge", "", 6, -4, 4);
+  TH1D* h1_u_jetcharge = new TH1D("u_jetcharge", "", 60, binlow, binhigh); // up quark histo
+  TH1D* h1_ubar_jetcharge= new TH1D("ubar_jetcharge", "", 60, binlow, binhigh); // up bar quark histo
+  TH1D* h1_d_jetcharge = new TH1D("d_jetcharge", "", 60, binlow, binhigh); // down quark histo
+  TH1D* h1_dbar_jetcharge = new TH1D("dbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
+  TH1D* h1_c_jetcharge= new TH1D("c_jetcharge", "", 60, binlow, binhigh); // down quark histo
+  TH1D* h1_cbar_jetcharge = new TH1D("cbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
+  TH1D* h1_b_jetcharge= new TH1D("b_jetcharge", "", 60, binlow, binhigh); // down quark histo
+  TH1D* h1_bbar_jetcharge = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
+  TH1D* h1_g_jetcharge = new TH1D("even_g_jetcharge", "", 30, binlow, binhigh); // down quark histo
+  TH1D* zero_jet_dtrcharge = new TH1D("jet_dtrcharge", "", 300, -4, 4); // jet daughter's charges histo
+  TH1D* zero_jet_size = new TH1D("jet_size", "", 300, 0, 25); // particle numbers in 0 jets
+  TH1* h1_pdg_0_charge = new TH1I ("pdg_0_charge","", 300, -300, 300 ); //pdg code for jet charge 0
+  TH1D* h1_frag_charge = new TH1D("even_frag_charge", "", 6, -2.5, 3.5);
+  TH1D* b_meson = new TH1D("b_meson_charge", "", 6, -4, 4);
   TH1D* pdg_parton = new TH1D("ist negative particle pdg", "", 300, -4, 4);
-
-  TH1D* h1_u_jetcharge_odd = new TH1D("odd_u_jetcharge", "", 300, binlow, binhigh); // up quark histo
-  TH1D* h1_ubar_jetcharge_odd = new TH1D("odd_ubar_jetcharge", "", 300, binlow, binhigh); // up bar quark histo
-  TH1D* h1_d_jetcharge_odd = new TH1D("odd_d_jetcharge", "", 300, binlow, binhigh); // down quark histo
-  TH1D* h1_dbar_jetcharge_odd = new TH1D("odd_dbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
-  TH1D* h1_c_jetcharge_odd = new TH1D("odd_c_jetcharge", "", 300, binlow, binhigh); // down quark histo
-  TH1D* h1_cbar_jetcharge_odd = new TH1D("odd_cbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
-  TH1D* h1_b_jetcharge_odd = new TH1D("odd_b_jetcharge", "", 300, binlow, binhigh); // down quark histo
-  TH1D* h1_bbar_jetcharge_odd = new TH1D("odd_bbar_jetcharge", "", 300, binlow, binhigh); // down bar histo
-  TH1D* h1_g_jetcharge_odd = new TH1D("odd_g_jetcharge", "", 30, binlow, binhigh); // down quark histo
-  TH1D* zero_jet_dtrcharge_odd = new TH1D("odd_jet_dtrcharge", "", 300, -4, 4); // jet daughter's charges histo
-  TH1D* zero_jet_size_odd = new TH1D("odd_jet_size", "", 300, 0, 25); // particle numbers in 0 jets
-  TH1* h1_pdg_0_charge_odd = new TH1I ("odd_pdg_0_charge","", 300, -300, 300 ); //pdg code for jet charge 0
-  TH1D* h1_frag_charge_odd = new TH1D("odd_frag_charge", "", 6, -2.5, 3.5);
-  TH1D* b_meson_odd = new TH1D("odd_b_meson_charge", "", 6, -4, 4);
-
 
 
 
@@ -222,16 +206,12 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       if(ip == 5){
         parton2.SetPxPyPzE(part->Px(), part->Py(), part->Pz(), part->Energy() );
         pdg_parton2 = part->GetPdgCode();
-      }
-	int pdg_parton=part->GetPdgCode();
-	if( ( pdg_parton > 0 && pdg_parton < 6)|| pdg_parton==21) {
-	cout << "pdg parton" << pdg_parton << endl;
-	} 
+      } 
       // Positive codes are final particles.
       if (ist <= 0) continue; //  we get it from previous line and  greater than 0 means it's not an intermidiate particle
       Int_t pdg = part->GetPdgCode();
       if(abs(pdg/100 %10) == 5){
-      h1_frag_charge_even->Fill(pdg/10 %10);
+      h1_frag_charge->Fill(pdg/10 %10);
       }
       Float_t charge = TDatabasePDG::Instance()->GetParticle(pdg)->Charge();
       //if (charge == 0.) continue;
@@ -261,7 +241,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     {
       if (jets[i].pt() < 20) continue; // get rid of low pT jets
       //if (jets[i].eta() < 2 || jets[i].eta() > 4.5) continue;
-      if(fabs(jets[i].eta()) > 4) continue;
+      if(fabs(jets[i].eta()) > 5 || fabs(jets[i].eta()) < 2) continue;
       //cout << "jet num : " <<  i << endl;
       PseudoJet jet = jets[i];
       TLorentzVector jetvec(jet.px(), jet.py(), jet.pz(), jet.e()); // Four vector of the jet
@@ -277,7 +257,7 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       }
      
       vector<PseudoJet> constituents = jet.constituents(); //give me jet daughters
-      if(constituents.size() % 2 == 0 && constituents.size() >2){
+      if( constituents.size() >2){
       double jetcharge = 0;
 
       for (unsigned j = 0; j < constituents.size(); j++) // knowing what each jet daugther property for us to maybe build jet charge
@@ -292,17 +272,10 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
       
       }
       jetcharge/=pow(jets[i].pt(), kappa); //normalize by jet pT
-//    	cout << "jet charge " << jetcharge << endl;
   
-      //mj inputing
 
        if ( fabs(jetcharge) < 0.05){
 
-//	    	cout << "jet charge zero " << jetcharge << endl; 		     
-/*		cout << endl; 	
- 		cout << " event number " << nev << endl;
-		cout<< "particles of jets "<<  constituents.size() << endl;
-*/
 
 		for (unsigned j = 0; j < constituents.size(); j++){
 	
@@ -311,15 +284,16 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
          			
      
 					int dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
-					if (jetcharge == 0 && dtrid == 22) continue; 
-					h1_pdg_0_charge_even->Fill(dtrid);
-					zero_jet_size_even->Fill(constituents.size());	
+					cout << " dtrid " << dtrid << endl;
+//					if (jetcharge == 0 && dtrid == 22) continue; 
+					h1_pdg_0_charge->Fill(dtrid);
+					zero_jet_size->Fill(constituents.size());	
      					double dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
-					zero_jet_dtrcharge_even->Fill(dtrcharge);					
+					zero_jet_dtrcharge->Fill(dtrcharge);					
 //					cout<< "dtrcharge " << dtrcharge <<endl;
 			 		int dtrflavor = (dtrid/ 100) % 10;
 				       	if (dtrflavor == 5 ){
- 						 b_meson_even->Fill(dtrcharge);
+ 						 b_meson->Fill(dtrcharge);
 
 					}
 			  
@@ -330,94 +304,22 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
 
 
 
-}       
-   
+ 
+       }   
      
 
       //Fill histograms
-      if(pdg_jet == 1) h1_d_jetcharge_even->Fill(jetcharge);
-      else if(pdg_jet == -1) h1_dbar_jetcharge_even->Fill(jetcharge);
-      else if(pdg_jet == 2) h1_u_jetcharge_even->Fill(jetcharge);
-      else if(pdg_jet == -2) h1_ubar_jetcharge_even->Fill(jetcharge);
-      else if(pdg_jet == 4) h1_c_jetcharge_even->Fill(jetcharge);
-      else if(pdg_jet == -4) h1_cbar_jetcharge_even->Fill(jetcharge);
-      else if(pdg_jet == 5) h1_b_jetcharge_even->Fill(jetcharge);
-      else if(pdg_jet == -5) h1_bbar_jetcharge_even->Fill(jetcharge);
-      else if(pdg_jet == 21) h1_g_jetcharge_even->Fill(jetcharge);
+      if(pdg_jet == 1) h1_d_jetcharge->Fill(jetcharge);
+      else if(pdg_jet == -1) h1_dbar_jetcharge->Fill(jetcharge);
+      else if(pdg_jet == 2) h1_u_jetcharge->Fill(jetcharge);
+      else if(pdg_jet == -2) h1_ubar_jetcharge->Fill(jetcharge);
+      else if(pdg_jet == 4) h1_c_jetcharge->Fill(jetcharge);
+      else if(pdg_jet == -4) h1_cbar_jetcharge->Fill(jetcharge);
+      else if(pdg_jet == 5) h1_b_jetcharge->Fill(jetcharge);
+      else if(pdg_jet == -5) h1_bbar_jetcharge->Fill(jetcharge);
+      else if(pdg_jet == 21) h1_g_jetcharge->Fill(jetcharge);
       }	
    
-
- if(constituents.size() % 2 != 0 && constituents.size()>2){
-      double jetcharge = 0;
-
-      for (unsigned j = 0; j < constituents.size(); j++) // knowing what each jet daugther property for us to maybe build jet charge
-      {
-
-
-        double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
-        PseudoJet con = constituents[j];
-        TVector3 con3(con.px(), con.py(), con.pz());
-        jetcharge+=pow(con.pt(), kappa)*dtrcharge/3.; //compute jet charge
-
-
-      }
-      jetcharge/=pow(jets[i].pt(), kappa); //normalize by jet pT
-     //   cout << "jet charge " << jetcharge << endl;
-
-      //mj inputing
-
-       if ( fabs(jetcharge) < 0.05){
-
-                cout << endl,
-                cout << "jet charge zero " << jetcharge << endl;
-/*              cout << endl;   
-                cout << " event number " << nev << endl;
-                cout<< "particles of jets "<<  constituents.size() << endl;
-*/
-
-                for (unsigned j = 0; j < constituents.size(); j++){
-
-                        PseudoJet con = constituents[j];
-
-
-
-                                        int dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
-                                        if (jetcharge == 0 && dtrid == 22) continue;
-                                        h1_pdg_0_charge_odd->Fill(dtrid);
-                                        zero_jet_size_odd->Fill(constituents.size());
-                                        double dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
-                                        zero_jet_dtrcharge_odd->Fill(dtrcharge);
-                                        //cout<< "dtrcharge " << dtrcharge <<endl;
-                                        int dtrflavor = (dtrid/ 100) % 10;
-                                        if (dtrflavor == 5 ){ 
-						b_meson_odd->Fill(dtrcharge);
-					}
-
-
-
-
-                }
-
-
-
-
-}
-
-
-
-      //Fill histograms
-      if(pdg_jet == 1) h1_d_jetcharge_odd->Fill(jetcharge);
-      else if(pdg_jet == -1) h1_dbar_jetcharge_odd->Fill(jetcharge);
-      else if(pdg_jet == 2) h1_u_jetcharge_odd->Fill(jetcharge);
-      else if(pdg_jet == -2) h1_ubar_jetcharge_odd->Fill(jetcharge);
-      else if(pdg_jet == 4) h1_c_jetcharge_odd->Fill(jetcharge);
-      else if(pdg_jet == -4) h1_cbar_jetcharge_odd->Fill(jetcharge);
-      else if(pdg_jet == 5) h1_b_jetcharge_odd->Fill(jetcharge);
-      else if(pdg_jet == -5) h1_bbar_jetcharge_odd->Fill(jetcharge);
-      else if(pdg_jet == 21) h1_g_jetcharge_odd->Fill(jetcharge);
-      }
-
-
     }
 
   }
@@ -493,50 +395,49 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
     ccan[ican]->cd(1);
     //plot stuff here!!!!
-    h1_u_jetcharge_even->SetXTitle("Jet Charge");
-    h1_u_jetcharge_even->SetLineColor(kBlack);
-    h1_u_jetcharge_even->SetLineStyle(kSolid);
+    h1_u_jetcharge->SetXTitle("Jet Charge");
+    h1_u_jetcharge->SetLineColor(kBlack);
+    h1_u_jetcharge->SetLineStyle(kSolid);
 
-    h1_ubar_jetcharge_even->SetLineColor(kRed);
-    h1_ubar_jetcharge_even->SetLineStyle(kDashed);
+    h1_ubar_jetcharge->SetLineColor(kRed);
+    h1_ubar_jetcharge->SetLineStyle(kDashed);
 
-    h1_u_jetcharge_even->Draw("HIST same");
-    h1_ubar_jetcharge_even->Draw("HIST same");
+    h1_u_jetcharge->Draw("HIST same");
+    h1_ubar_jetcharge->Draw("HIST same");
 
     ccan[ican]->cd(2);
+    h1_d_jetcharge->SetLineColor(kBlack);
+    h1_d_jetcharge->SetLineStyle(kSolid);
 
-    h1_u_jetcharge_odd->SetLineColor(kBlack);
-    h1_u_jetcharge_odd->SetLineStyle(kSolid);
+    h1_dbar_jetcharge->SetLineColor(kRed);
+    h1_dbar_jetcharge->SetLineStyle(kDashed);
 
-    h1_ubar_jetcharge_odd->SetLineColor(kRed);
-    h1_ubar_jetcharge_odd->SetLineStyle(kDashed);
-
-    h1_u_jetcharge_odd->Draw("HIST same");
-    h1_ubar_jetcharge_odd->Draw("HIST same");
+    h1_d_jetcharge->Draw("HIST same");
+    h1_dbar_jetcharge->Draw("HIST same");
 
     ccan[ican]->cd(3);
-    h1_d_jetcharge_even->SetLineColor(kBlack);
-    h1_d_jetcharge_even->SetLineStyle(kSolid);
+    //plot stuff here!!!!
+    h1_c_jetcharge->SetXTitle("Jet Charge");
+    h1_c_jetcharge->SetLineColor(kBlack);
+    h1_c_jetcharge->SetLineStyle(kSolid);
 
-    h1_dbar_jetcharge_even->SetLineColor(kRed);
-    h1_dbar_jetcharge_even->SetLineStyle(kDashed);
+    h1_cbar_jetcharge->SetLineColor(kRed);
+    h1_cbar_jetcharge->SetLineStyle(kDashed);
 
-    h1_d_jetcharge_even->Draw("HIST same");
-    h1_dbar_jetcharge_even->Draw("HIST same");
+    h1_c_jetcharge->Draw("HIST same");
+    h1_cbar_jetcharge->Draw("HIST same");  
+
 
     ccan[ican]->cd(4);
-    h1_d_jetcharge_odd->SetLineColor(kBlack);
-    h1_d_jetcharge_odd->SetLineStyle(kSolid);
+    h1_b_jetcharge->SetLineColor(kBlack);
+    h1_b_jetcharge->SetLineStyle(kSolid);
 
-    h1_dbar_jetcharge_odd->SetLineColor(kRed);
-    h1_dbar_jetcharge_odd->SetLineStyle(kDashed);
+    h1_bbar_jetcharge->SetLineColor(kRed);
+    h1_bbar_jetcharge->SetLineStyle(kDashed);
 
-    h1_d_jetcharge_odd->Draw("HIST same");
-    h1_dbar_jetcharge_odd->Draw("HIST same");
-  
+    h1_b_jetcharge->Draw("HIST same");
+    h1_bbar_jetcharge->Draw("HIST same");
 
-
-  
 
     ccan[ican]->cd();ccan[ican]->Update();
     if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
@@ -544,72 +445,9 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     
 
 
- // Start new page!!!!
-
-    ++ican;
-    sprintf(buf,"ccan%d",ican);
-    ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
-    ccan[ican]->SetFillColor(10);
-    //gPad->SetLeftMargin(0.16);
-    //gPad->SetBottomMargin(0.06);
-    ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
-    ccan[ican]->cd(1);
-    //plot stuff here!!!!
-    h1_c_jetcharge_even->SetXTitle("Jet Charge");
-    h1_c_jetcharge_even->SetLineColor(kBlack);
-    h1_c_jetcharge_even->SetLineStyle(kSolid);
-
-    h1_cbar_jetcharge_even->SetLineColor(kRed);
-    h1_cbar_jetcharge_even->SetLineStyle(kDashed);
-
-    h1_c_jetcharge_even->Draw("HIST same");
-    h1_cbar_jetcharge_even->Draw("HIST same");
-
-    ccan[ican]->cd(2);
-
-    h1_c_jetcharge_odd->SetLineColor(kBlack);
-    h1_c_jetcharge_odd->SetLineStyle(kSolid);
-
-    h1_cbar_jetcharge_odd->SetLineColor(kRed);
-    h1_cbar_jetcharge_odd->SetLineStyle(kDashed);
-
-    h1_c_jetcharge_odd->Draw("HIST same");
-    h1_cbar_jetcharge_odd->Draw("HIST same");
-
-    ccan[ican]->cd(3);
-    h1_b_jetcharge_even->SetLineColor(kBlack);
-    h1_b_jetcharge_even->SetLineStyle(kSolid);
-
-    h1_bbar_jetcharge_even->SetLineColor(kRed);
-    h1_bbar_jetcharge_even->SetLineStyle(kDashed);
-
-    h1_b_jetcharge_even->Draw("HIST same");
-    h1_bbar_jetcharge_even->Draw("HIST same");
-
-    ccan[ican]->cd(4);
-    h1_b_jetcharge_odd->SetLineColor(kBlack);
-    h1_b_jetcharge_odd->SetLineStyle(kSolid);
-
-    h1_bbar_jetcharge_odd->SetLineColor(kRed);
-    h1_bbar_jetcharge_odd->SetLineStyle(kDashed);
-
-    h1_b_jetcharge_odd->Draw("HIST same");
-    h1_bbar_jetcharge_odd->Draw("HIST same");
-   
 
 
 
-
-    ccan[ican]->cd();ccan[ican]->Update();
-    if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
-       else { ccan[ican]->Print(plotfilePDF.Data()); }
-
-	
-
-
-
-
-    //
     // Start new page!!!!
     //
     ++ican;
@@ -621,55 +459,24 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
     ccan[ican]->cd(1);
 
-    zero_jet_size_even->Draw("HIST same");
+    zero_jet_size->Draw("HIST same");
 
+    ccan [ican]->cd(2);
+    zero_jet_dtrcharge->Draw();
 
-
-    ccan[ican]->cd(2);
-   
-    zero_jet_size_odd->Draw("HIST same");
 
     ccan [ican]->cd(3);
-    zero_jet_dtrcharge_even->Draw();
+    h1_pdg_0_charge->Draw();
 
-
-    ccan [ican]->cd(4);
-    zero_jet_dtrcharge_odd->Draw();
-    
-
-
- ccan[ican]->cd();ccan[ican]->Update();
-    if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
-       else { ccan[ican]->Print(plotfilePDF.Data()); }
-
-//new page
-    ++ican;
-    sprintf(buf,"ccan%d",ican);
-    ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
-    ccan[ican]->SetFillColor(10);
-    //gPad->SetLeftMargin(0.16);
-    //gPad->SetBottomMargin(0.06);
-    ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
-    ccan[ican]->cd(1);
-     ++ican;
-    sprintf(buf,"ccan%d",ican);
-    ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
-    ccan[ican]->SetFillColor(10);
-    //gPad->SetLeftMargin(0.16);
-    //gPad->SetBottomMargin(0.06);
-    ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
-    ccan[ican]->cd(1);
-     b_meson_even->Draw();
-
-
-
-    ccan[ican]->cd(2);
-  b_meson_odd->Draw();
+    ccan[ican]->cd(4);
+     b_meson->Draw();
 
     ccan[ican]->cd();ccan[ican]->Update();
     if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
        else { ccan[ican]->Print(plotfilePDF.Data()); }
-    
+
+
+
 
 
       ++ican;
@@ -680,24 +487,19 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
     //gPad->SetBottomMargin(0.06);
     ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
     ccan[ican]->cd(1);
-    h1_g_jetcharge_even->SetLineColor(kBlack);
-    h1_g_jetcharge_even->SetLineStyle(kSolid);
+    h1_g_jetcharge->SetLineColor(kBlack);
+    h1_g_jetcharge->SetLineStyle(kSolid);
 
-    h1_g_jetcharge_even->Draw("HIST same");
+    h1_g_jetcharge->Draw("HIST same");
 
 
 
 
     ccan[ican]->cd(2);
-    //plot stuff here!!!!
-    h1_frag_charge_even->Draw();
-
-    ccan [ican]->cd(3);
-    h1_pdg_0_charge_even->Draw();
+    h1_frag_charge->Draw();
 
 
-    ccan [ican]->cd(4);
-     h1_pdg_0_charge_odd->Draw();
+
 
     ccan[ican]->cd();ccan[ican]->Update();
     if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
