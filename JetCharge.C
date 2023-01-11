@@ -66,7 +66,8 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
 
   // choose a jet definition
   double R = 0.5; //in LHCb radius is fixed
-  double kappa = 0.3;
+  double kappa = 0.7;
+
 
   TString extension = TString("jetcharge")+Form("_ev_%d", nev)+
                       Form("_R0%d", int(R*10))+Form("_k0%d", int(kappa*10))+
@@ -87,30 +88,24 @@ void JetCharge(Int_t nev  = 100, int mode = 0,
 
 
   // Histgrams for jet charge
-  TH1D* h1_u_jetcharge_pT = new TH1D("u_jetcharge", "", 60, binlow, binhigh); // up quark histo
-  TH1D* h1_ubar_jetcharge_pT= new TH1D("ubar_jetcharge", "", 60, binlow, binhigh); // up bar quark histo
-  TH1D* h1_d_jetcharge_pT = new TH1D("d_jetcharge", "", 60, binlow, binhigh); // down quark histo
-  TH1D* h1_dbar_jetcharge_pT = new TH1D("dbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
-  TH1D* h1_c_jetcharge_pT= new TH1D("c_jetcharge", "", 60, binlow, binhigh); // down quark histo
-  TH1D* h1_cbar_jetcharge_pT = new TH1D("cbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
-  TH1D* h1_b_jetcharge_pT= new TH1D("b_jetcharge", "", 60, binlow, binhigh); // down quark histo
-  TH1D* h1_bbar_jetcharge_pT = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
-  TH1D* h1_u_jetcharge_z = new TH1D("u_jetcharge", "", 60, binlow, binhigh); // up quark histo
-TH1D* h1_ubar_jetcharge_z= new TH1D("ubar_jetcharge", "", 60, binlow, binhigh); // up bar quark histo
-TH1D* h1_d_jetcharge_z = new TH1D("d_jetcharge", "", 60, binlow, binhigh); // down quark histo
-TH1D* h1_dbar_jetcharge_z = new TH1D("dbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
-TH1D* h1_c_jetcharge_z= new TH1D("c_jetcharge", "", 60, binlow, binhigh); // down quark histo
-TH1D* h1_cbar_jetcharge_z = new TH1D("cbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
-TH1D* h1_b_jetcharge_z= new TH1D("b_jetcharge", "", 60, binlow, binhigh); // down quark histo
-TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
-  TH1D* h1_g_jetcharge = new TH1D("even_g_jetcharge", "", 30, binlow, binhigh); // down quark histo
-  TH1D* zero_jet_dtrcharge = new TH1D("jet_dtrcharge", "", 300, -4, 4); // jet daughter's charges histo
-  TH1D* zero_jet_size = new TH1D("jet_size", "", 300, 0, 25); // particle numbers in 0 jets
-  TH1* h1_pdg_0_charge = new TH1I ("pdg_0_charge","", 300, -300, 300 ); //pdg code for jet charge 0
+  TH1D* h1_u_jetcharge_pT = new TH1D("pT u_jetcharge", "", 60, binlow, binhigh); // up quark histo
+  TH1D* h1_ubar_jetcharge_pT= new TH1D("pT ubar_jetcharge", "", 60, binlow, binhigh); // up bar quark histo
+  TH1D* h1_d_jetcharge_pT = new TH1D("pT d_jetcharge", "", 60, binlow, binhigh); // down quark histo
+  TH1D* h1_dbar_jetcharge_pT = new TH1D("pT dbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
+  TH1D* h1_c_jetcharge_pT= new TH1D("pT c_jetcharge", "", 60, binlow, binhigh); // down quark histo
+  TH1D* h1_cbar_jetcharge_pT = new TH1D("pT cbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
+  TH1D* h1_b_jetcharge_pT= new TH1D("pT b_jetcharge", "", 60, binlow, binhigh); // down quark histo
+  TH1D* h1_bbar_jetcharge_pT = new TH1D("pT bbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
+  TH1D* h1_u_jetcharge_z = new TH1D("z u_jetcharge", "", 60, binlow, binhigh); // up quark histo
+  TH1D* h1_ubar_jetcharge_z= new TH1D("z ubar_jetcharge", "", 60, binlow, binhigh); // up bar quark histo
+  TH1D* h1_d_jetcharge_z = new TH1D("z d_jetcharge", "", 60, binlow, binhigh); // down quark histo
+  TH1D* h1_dbar_jetcharge_z = new TH1D("z dbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
+  TH1D* h1_c_jetcharge_z= new TH1D("z c_jetcharge", "", 60, binlow, binhigh); // down quark histo
+  TH1D* h1_cbar_jetcharge_z = new TH1D("z cbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
+  TH1D* h1_b_jetcharge_z= new TH1D(" z b_jetcharge", "", 60, binlow, binhigh); // down quark histo
+  TH1D* h1_bbar_jetcharge_z = new TH1D(" zbbar_jetcharge", "", 60, binlow, binhigh); // down bar histo
   TH1D* h1_frag_charge = new TH1D("even_frag_charge", "", 6, -2.5, 3.5);
-  TH1D* b_meson = new TH1D("b_meson_charge", "", 6, -4, 4);
-  TH1D* pdg_parton = new TH1D("ist negative particle pdg", "", 300, -4, 4);
-
+  TH2* pTvsz = new TH2F("ptvsz", "h2 title", 30, 0, 2.0, 30, 0.0, 2.0);
 
 
 
@@ -257,6 +252,7 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
       else if(jetvec.DeltaR(parton2) < 0.1) has_parton2 = true; //Check whether the direction of the jet matches the second outgoing parton
       TVector3 pJet(jet.px(),jet.py(),jet.pz());// defining pjet for the denominator of
       double pJetmag=pJet.Mag();//magnitude of pJet
+      
 
 
       if(has_parton1&&(!has_parton2)){// If this is true, then the jet came from the first outgoing parton
@@ -270,7 +266,9 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
       if( constituents.size() >2){
       double jetcharge_pT = 0;
       double jetcharge_z = 0;
-
+      double PT = 0;
+      double Z = 0;
+      double jetcharge_z_norm=0;
       for (unsigned j = 0; j < constituents.size(); j++) // knowing what each jet daugther property for us to maybe build jet charge
       {
       
@@ -278,50 +276,29 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
         double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
         PseudoJet con = constituents[j];
         TVector3 con3(con.px(), con.py(), con.pz());
-	double pjetCon= pJet.Dot(con3); //the numerator of z
-	double z= pjetCon/pJetmag;
-	
-
+	      double pjetCon= pJet.Dot(con3); //the numerator of z
+	      double z= pjetCon/pow(pJet.Mag(),2);
+        
         jetcharge_z+=pow(z, kappa)*dtrcharge/3.; //compute jet charge
+        jetcharge_z_norm+= pow(z,kappa);
+        //double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
+        //PseudoJet con = constituents[j];
+        //TVector3 con3(con.px(), con.py(), con.pz());
+        jetcharge_pT+=pow(con.pt(), kappa)*dtrcharge/3.; //compute jet charge
 
-      
+       // double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
+       // PseudoJet con = constituents[j];
+        //TVector3 con3(con.px(), con.py(), con.pz());
+        //double pjetCon= pJet.Dot(con3); //the numerator of z
+        //double z= pjetCon/pow(pJet.Mag(),2);
+
+        PT=con.pt() /jets[i].pt();
+        pTvsz->Fill(z,PT);
       }
-      jetcharge_z/=pow(pJetmag, kappa); //normalize by jet pT
+      //jetcharge_z/=pow(pJetmag, kappa); //normalize by jet pT
   
-
-       if ( fabs(jetcharge_z) < 0.05){
-
-
-		for (unsigned j = 0; j < constituents.size(); j++){
-	
-			PseudoJet con = constituents[j];
-
-         			
-     
-					int dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
-					cout << " dtrid " << dtrid << endl;
-//					if (jetcharge == 0 && dtrid == 22) continue; 
-					h1_pdg_0_charge->Fill(dtrid);
-					zero_jet_size->Fill(constituents.size());	
-     					double dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
-					zero_jet_dtrcharge->Fill(dtrcharge);					
-//					cout<< "dtrcharge " << dtrcharge <<endl;
-			 		int dtrflavor = (dtrid/ 100) % 10;
-				       	if (dtrflavor == 5 ){
- 						 b_meson->Fill(dtrcharge);
-
-					}
-			  
-			 
-
-		}
-
-
-
-
- 
-       }   //292
-
+      jetcharge_pT/=pow(jets[i].pt(), kappa); //normalize by jet pT
+       
 
       //Fill histograms
       if(pdg_jet == 1) h1_d_jetcharge_z->Fill(jetcharge_z);
@@ -332,85 +309,36 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
       else if(pdg_jet == -4) h1_cbar_jetcharge_z->Fill(jetcharge_z);
       else if(pdg_jet == 5) h1_b_jetcharge_z->Fill(jetcharge_z);
       else if(pdg_jet == -5) h1_bbar_jetcharge_z->Fill(jetcharge_z);
-      else if(pdg_jet == 21) h1_g_jetcharge->Fill(jetcharge_z);
+      if(pdg_jet == 1) h1_d_jetcharge_pT->Fill(jetcharge_pT);
+      else if(pdg_jet == -1) h1_dbar_jetcharge_pT->Fill(jetcharge_pT);
+      else if(pdg_jet == 2) h1_u_jetcharge_pT->Fill(jetcharge_pT);
+      else if(pdg_jet == -2) h1_ubar_jetcharge_pT->Fill(jetcharge_pT);
+      else if(pdg_jet == 4) h1_c_jetcharge_pT->Fill(jetcharge_pT);
+      else if(pdg_jet == -4) h1_cbar_jetcharge_pT->Fill(jetcharge_pT);
+      else if(pdg_jet == 5) h1_b_jetcharge_pT->Fill(jetcharge_pT);
+      else if(pdg_jet == -5) h1_bbar_jetcharge_pT->Fill(jetcharge_pT);
+      
       }
         
-      if( constituents.size() >2){
-              double jetcharge_pT = 0;
+     
+   if( constituents.size() >2){
+     
 
-              for (unsigned j = 0; j < constituents.size(); j++) // knowing what each jet daugther property for us to maybe build jet charge
-              {
-              
-               
-                double  dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
-                PseudoJet con = constituents[j];
-                TVector3 con3(con.px(), con.py(), con.pz());
-                jetcharge_pT+=pow(con.pt(), kappa)*dtrcharge/3.; //compute jet charge
-
-              
-              }
-              jetcharge_pT/=pow(jets[i].pt(), kappa); //normalize by jet pT
-          
-
-               if ( fabs(jetcharge_pT) < 0.05){
+      for (unsigned j = 0; j < constituents.size(); j++) // knowing what each jet daugther property for us to maybe build jet charge
+      {
 
 
-                for (unsigned j = 0; j < constituents.size(); j++){
-            
-                    PseudoJet con = constituents[j];
+       
+      }
+   }
 
-                             
-             
-                            int dtrid = constituents.at(j).user_info<MyInfo>().pdg_id();
-                            cout << " dtrid " << dtrid << endl;
-        //                    if (jetcharge == 0 && dtrid == 22) continue;
-                            h1_pdg_0_charge->Fill(dtrid);
-                            zero_jet_size->Fill(constituents.size());
-                                 double dtrcharge = constituents.at(j).user_info<MyInfo>().pdg_charge();
-                            zero_jet_dtrcharge->Fill(dtrcharge);
-        //                    cout<< "dtrcharge " << dtrcharge <<endl;
-                             int dtrflavor = (dtrid/ 100) % 10;
-                                   if (dtrflavor == 5 ){
-                                  b_meson->Fill(dtrcharge);
-
-                            }
-                      
-                     
-
-                }
-
-
-
-
-         
-               }
-             
-
-              //Fill histograms
-              if(pdg_jet == 1) h1_d_jetcharge_pT->Fill(jetcharge_pT);
-              else if(pdg_jet == -1) h1_dbar_jetcharge_pT->Fill(jetcharge_pT);
-              else if(pdg_jet == 2) h1_u_jetcharge_pT->Fill(jetcharge_pT);
-              else if(pdg_jet == -2) h1_ubar_jetcharge_pT->Fill(jetcharge_pT);
-              else if(pdg_jet == 4) h1_c_jetcharge_pT->Fill(jetcharge_pT);
-              else if(pdg_jet == -4) h1_cbar_jetcharge_pT->Fill(jetcharge_pT);
-              else if(pdg_jet == 5) h1_b_jetcharge_pT->Fill(jetcharge_pT);
-              else if(pdg_jet == -5) h1_bbar_jetcharge_pT->Fill(jetcharge_pT);
-              else if(pdg_jet == 21) h1_g_jetcharge->Fill(jetcharge_pT);
-              }
-   
     }
 
   }
-  //Normalize histograms such that their integral = 1
-  //h1_u_jetcharge->Scale(1./h1_u_jetcharge->Integral());
-  //h1_ubar_jetcharge->Scale(1./h1_ubar_jetcharge->Integral());
-  //h1_d_jetcharge->Scale(1./h1_d_jetcharge->Integral());
-  //h1_dbar_jetcharge->Scale(1./h1_dbar_jetcharge->Integral());
-  //pythia8->PrintStatistics();
+ 
 
-
-      //---- paint setup...
-    //
+    
+   
     //The following doesn't matter much, skip ahead!!
     int ican=-1,iframe=-1,itext=-1;
     TCanvas *ccan[1000];
@@ -473,6 +401,16 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
     ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
     ccan[ican]->cd(1);
     //plot stuff here!!!!
+ 
+    h1_u_jetcharge_pT->SetXTitle("Jet Charge");
+    h1_u_jetcharge_pT->SetLineColor(kBlue);
+    h1_u_jetcharge_pT->SetLineStyle(kSolid);
+
+    h1_ubar_jetcharge_pT->SetLineColor(kGreen);
+    h1_ubar_jetcharge_pT->SetLineStyle(kDashed);
+
+    h1_u_jetcharge_pT->Draw("HIST same");
+    h1_ubar_jetcharge_pT->Draw("HIST same");
     h1_u_jetcharge_z->SetXTitle("Jet Charge");
     h1_u_jetcharge_z->SetLineColor(kBlack);
     h1_u_jetcharge_z->SetLineStyle(kSolid);
@@ -483,15 +421,97 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
     h1_u_jetcharge_z->Draw("HIST same");
     h1_ubar_jetcharge_z->Draw("HIST same");
     
-    h1_u_jetcharge_pT->SetXTitle("Jet Charge");
-    h1_u_jetcharge_pT->SetLineColor(kBlue);
-    h1_u_jetcharge_pT->SetLineStyle(kSolid);
 
-    h1_ubar_jetcharge_pT->SetLineColor(kGreen);
-    h1_ubar_jetcharge_pT->SetLineStyle(kDashed);
+    ccan[ican]->cd(2);
+   
 
-    h1_u_jetcharge_pT->Draw("HIST same");
-    h1_ubar_jetcharge_pT->Draw("HIST same");
+    h1_d_jetcharge_pT->SetLineColor(kBlue);
+    h1_d_jetcharge_pT->SetLineStyle(kSolid);
+
+    h1_dbar_jetcharge_pT->SetLineColor(kGreen);
+    h1_dbar_jetcharge_pT->SetLineStyle(kDashed);
+
+    h1_d_jetcharge_pT->Draw("HIST same");
+    h1_dbar_jetcharge_pT->Draw("HIST same");
+    h1_d_jetcharge_z->SetLineColor(kBlack);
+    h1_d_jetcharge_z->SetLineStyle(kSolid);
+
+    h1_dbar_jetcharge_z->SetLineColor(kRed);
+    h1_dbar_jetcharge_z->SetLineStyle(kDashed);
+
+    h1_d_jetcharge_z->Draw("HIST same");
+    h1_dbar_jetcharge_z->Draw("HIST same");
+
+
+    ccan[ican]->cd(3);
+    //plot stuff here!!!!
+
+    
+    h1_c_jetcharge_pT->SetXTitle("Jet Charge");
+    h1_c_jetcharge_pT->SetLineColor(kBlue);
+    h1_c_jetcharge_pT->SetLineStyle(kSolid);
+
+    h1_cbar_jetcharge_pT->SetLineColor(kGreen);
+    h1_cbar_jetcharge_pT->SetLineStyle(kDashed);
+
+    h1_c_jetcharge_pT->Draw("HIST same");
+    h1_cbar_jetcharge_pT->Draw("HIST same");
+
+    h1_c_jetcharge_z->SetXTitle("Jet Charge");
+    h1_c_jetcharge_z->SetLineColor(kBlack);
+    h1_c_jetcharge_z->SetLineStyle(kSolid);
+
+    h1_cbar_jetcharge_z->SetLineColor(kRed);
+    h1_cbar_jetcharge_z->SetLineStyle(kDashed);
+
+    h1_c_jetcharge_z->Draw("HIST same");
+    h1_cbar_jetcharge_z->Draw("HIST same");
+
+
+    ccan[ican]->cd(4);
+
+    
+    h1_b_jetcharge_pT->SetLineColor(kBlue);
+    h1_b_jetcharge_pT->SetLineStyle(kSolid);
+
+    h1_bbar_jetcharge_pT->SetLineColor(kGreen);
+    h1_bbar_jetcharge_pT->SetLineStyle(kDashed);
+
+    h1_b_jetcharge_pT->Draw("HIST same");
+    h1_bbar_jetcharge_pT->Draw("HIST same");
+
+    h1_b_jetcharge_z->SetLineColor(kBlack);
+    h1_b_jetcharge_z->SetLineStyle(kSolid);
+
+    h1_bbar_jetcharge_z->SetLineColor(kRed);
+    h1_bbar_jetcharge_z->SetLineStyle(kDashed);
+
+    h1_b_jetcharge_z->Draw("HIST same");
+    h1_bbar_jetcharge_z->Draw("HIST same");
+    ccan[ican]->cd();ccan[ican]->Update();
+    if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
+       else { ccan[ican]->Print(plotfilePDF.Data()); }
+    
+       
+
+       ++ican;
+      sprintf(buf,"ccan%d",ican);
+      ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
+      ccan[ican]->SetFillColor(10);
+      ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
+      ccan[ican]->cd(1);
+    //plot stuff here!!!!
+    h1_u_jetcharge_z->SetXTitle("Jet Charge");
+    h1_u_jetcharge_z->SetLineColor(kBlack);
+    h1_u_jetcharge_z->SetLineStyle(kSolid);
+
+    h1_ubar_jetcharge_z->SetLineColor(kRed);
+    h1_ubar_jetcharge_z->SetLineStyle(kDashed);
+
+    h1_u_jetcharge_z->Draw("HIST same");
+    h1_ubar_jetcharge_z->Draw("HIST same");
+    
+    
 
     ccan[ican]->cd(2);
     h1_d_jetcharge_z->SetLineColor(kBlack);
@@ -503,14 +523,7 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
     h1_d_jetcharge_z->Draw("HIST same");
     h1_dbar_jetcharge_z->Draw("HIST same");
 
-    h1_d_jetcharge_pT->SetLineColor(kBlue);
-    h1_d_jetcharge_pT->SetLineStyle(kSolid);
-
-    h1_dbar_jetcharge_pT->SetLineColor(kGreen);
-    h1_dbar_jetcharge_pT->SetLineStyle(kDashed);
-
-    h1_d_jetcharge_pT->Draw("HIST same");
-    h1_dbar_jetcharge_pT->Draw("HIST same");
+   
 
 
     ccan[ican]->cd(3);
@@ -525,16 +538,7 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
     h1_c_jetcharge_z->Draw("HIST same");
     h1_cbar_jetcharge_z->Draw("HIST same");
     
-    h1_c_jetcharge_pT->SetXTitle("Jet Charge");
-    h1_c_jetcharge_pT->SetLineColor(kBlue);
-    h1_c_jetcharge_pT->SetLineStyle(kSolid);
-
-    h1_cbar_jetcharge_pT->SetLineColor(kGreen);
-    h1_cbar_jetcharge_pT->SetLineStyle(kDashed);
-
-    h1_c_jetcharge_pT->Draw("HIST same");
-    h1_cbar_jetcharge_pT->Draw("HIST same");
-
+   
 
     ccan[ican]->cd(4);
     h1_b_jetcharge_z->SetLineColor(kBlack);
@@ -546,53 +550,13 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
     h1_b_jetcharge_z->Draw("HIST same");
     h1_bbar_jetcharge_z->Draw("HIST same");
     
-    h1_b_jetcharge_pT->SetLineColor(kBlue);
-    h1_b_jetcharge_pT->SetLineStyle(kSolid);
-
-    h1_bbar_jetcharge_pT->SetLineColor(kGreen);
-    h1_bbar_jetcharge_pT->SetLineStyle(kDashed);
-
-    h1_b_jetcharge_pT->Draw("HIST same");
-    h1_bbar_jetcharge_pT->Draw("HIST same");
-
+   
 
     ccan[ican]->cd();ccan[ican]->Update();
     if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
        else { ccan[ican]->Print(plotfilePDF.Data()); }
     
-
-
-
-
-
-    // Start new page!!!!
-    //
-    ++ican;
-    sprintf(buf,"ccan%d",ican);
-    ccan[ican] = new TCanvas(buf,buf,30*ican,30*ican,800,(8.5/11.)*800);
-    ccan[ican]->SetFillColor(10);
-    //gPad->SetLeftMargin(0.16);
-    //gPad->SetBottomMargin(0.06);
-    ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
-    ccan[ican]->cd(1);
-
-    zero_jet_size->Draw("HIST same");
-
-    ccan [ican]->cd(2);
-    zero_jet_dtrcharge->Draw();
-
-
-    ccan [ican]->cd(3);
-    h1_pdg_0_charge->Draw();
-
-    ccan[ican]->cd(4);
-     b_meson->Draw();
-
-    ccan[ican]->cd();ccan[ican]->Update();
-    if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
-       else { ccan[ican]->Print(plotfilePDF.Data()); }
-
-
+    
 
 
 
@@ -603,20 +567,16 @@ TH1D* h1_bbar_jetcharge_z = new TH1D("bbar_jetcharge", "", 60, binlow, binhigh);
     //gPad->SetLeftMargin(0.16);
     //gPad->SetBottomMargin(0.06);
     ccan[ican]->cd(); ccan[ican]->Divide(2,2,0.0001,0.0001);
+   
+
+
     ccan[ican]->cd(1);
-    h1_g_jetcharge->SetLineColor(kBlack);
-    h1_g_jetcharge->SetLineStyle(kSolid);
-
-    h1_g_jetcharge->Draw("HIST same");
-
-
-
-
-    ccan[ican]->cd(2);
     h1_frag_charge->Draw();
 
 
 
+    ccan[ican]->cd(2);
+    pTvsz->Draw();
 
     ccan[ican]->cd();ccan[ican]->Update();
     if (ican==0){ ccan[ican]->Print(plotfileO.Data()); }
